@@ -90,9 +90,10 @@ static bool timespec_normalized(const struct timespec *ts)
 
 static void clock_gettime_verify(struct ctx *ctx)
 {
-	struct timespec now;
+	struct timespec now, first;
 
 	clock_gettime_syscall_nofail(CLOCK_ID, &now);
+	first = now;
 
 	ctx_start_timer(ctx);
 
@@ -145,6 +146,11 @@ static void clock_gettime_verify(struct ctx *ctx)
 				    (long int)now.tv_sec, (long int)now.tv_nsec);
 		}
 
+	}
+
+	if (first.tv_sec == now.tv_sec && first.tv_nsec == now.tv_sec) {
+		log_failure(ctx, "Time hasn't changed since the test started: [%ld, %ld]\n",
+			    (long int)now.tv_sec, (long int)now.tv_nsec);
 	}
 
 	ctx_cleanup_timer(ctx);
