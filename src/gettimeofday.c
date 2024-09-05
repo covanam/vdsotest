@@ -190,14 +190,14 @@ static const char *gtod_arg_type_str[] = {
 static void do_gettimeofday(void *arg, struct syscall_result *res)
 {
 	struct gettimeofday_args *args = arg;
-	int err;
+	int ret;
 
 	syscall_prepare();
 	if (args->force_syscall)
-		err = gettimeofday_syscall_wrapper(args->tv, args->tz);
+		ret = gettimeofday_syscall_wrapper(args->tv, args->tz);
 	else
-		err = gettimeofday_vdso(args->tv, args->tz);
-	record_syscall_result(res, err, errno);
+		ret = DO_VDSO_CALL(gettimeofday_vdso, int, 2, args->tv, args->tz);
+	record_syscall_result(res, ret, errno);
 }
 
 static void *gtod_arg_alloc(enum gtod_arg_type t)
