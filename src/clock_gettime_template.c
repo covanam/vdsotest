@@ -303,7 +303,7 @@ static const struct child_params vdso_clock_gettime_abi_params[] = {
 		.expected_ret = -1,
 		.expected_errno = EFAULT,
 		.signal_set = {
-			.mask = SIGNO_TO_BIT(SIGSEGV),
+			.mask = SIGNO_TO_BIT(SIGSEGV) | SIGNO_TO_BIT(SIGBUS),
 		},
 	},
 	{

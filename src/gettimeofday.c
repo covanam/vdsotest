@@ -345,7 +345,7 @@ static void gettimeofday_abi(struct ctx *ctx)
 
 			args.force_syscall = false;
 			if (gtod_args_should_fault(tv_type, tz_type))
-				signal_set.mask |= SIGNO_TO_BIT(SIGSEGV);
+				signal_set.mask = SIGNO_TO_BIT(SIGSEGV) | SIGNO_TO_BIT(SIGBUS);
 
 			xasprintf(&desc, "gettimeofday(%s, %s) (VDSO)",
 				  gtod_arg_type_str[tv_type],
